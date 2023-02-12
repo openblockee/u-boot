@@ -754,7 +754,7 @@
 			resets = <&ccu RST_BUS_I2C0>;
 			pinctrl-names = "default";
 			pinctrl-0 = <&i2c0_pins>;
-			status = "disabled";
+			status = "okay";
 			#address-cells = <1>;
 			#size-cells = <0>;
 		};

@@ -50,12 +50,18 @@
 #include <asm/setup.h>
 #include <status_led.h>
 
+#include "ssd1306/ssd1306.h"
+
 DECLARE_GLOBAL_DATA_PTR;
 
 void i2c_init_board(void)
 {
 #ifdef CONFIG_I2C0_ENABLE
-#if defined(CONFIG_MACH_SUN4I) || \
+#if defined(CONFIG_MACH_SUN8I_H3)
+	sunxi_gpio_set_cfgpin(SUNXI_GPA(11), SUN8I_H3_GPA_TWI0);
+	sunxi_gpio_set_cfgpin(SUNXI_GPA(12), SUN8I_H3_GPA_TWI0);
+	clock_twi_onoff(0, 1);
+#elif defined(CONFIG_MACH_SUN4I) || \
     defined(CONFIG_MACH_SUN5I) || \
     defined(CONFIG_MACH_SUN7I) || \
     defined(CONFIG_MACH_SUN8I_R40)
@@ -82,7 +88,11 @@ void i2c_init_board(void)
 #endif
 
 #ifdef CONFIG_I2C1_ENABLE
-#if defined(CONFIG_MACH_SUN4I) || \
+#if defined(CONFIG_MACH_SUN8I_H3)
+	sunxi_gpio_set_cfgpin(SUNXI_GPA(18), SUN8I_H3_GPA_TWI1);
+	sunxi_gpio_set_cfgpin(SUNXI_GPA(19), SUN8I_H3_GPA_TWI1);
+	clock_twi_onoff(1, 1);
+#elif defined(CONFIG_MACH_SUN4I) || \
     defined(CONFIG_MACH_SUN7I) || \
     defined(CONFIG_MACH_SUN8I_R40)
 	sunxi_gpio_set_cfgpin(SUNXI_GPB(18), SUN4I_GPB_TWI1);
@@ -257,6 +267,20 @@ int board_init(void)
 	 * clk, reset and pinctrl drivers land.
 	 */
 	i2c_init_board();
+
+    ssd1306_init();
+    ssd1306_draw_point(64, 16, SSD1306_WHITE);
+    ssd1306_draw_line(0, 0, 40, 32, SSD1306_WHITE);
+    ssd1306_draw_circle(80, 16, 8, SSD1306_WHITE);
+    ssd1306_refresh();
+    ssd1306_color_invert(1);
+    mdelay(500);
+    ssd1306_color_invert(0);
+    ssd1306_clear();
+    ssd1306_show_char(0, 0, 'A', SSD1306_FONT_6X8, SSD1306_WHITE);
+    ssd1306_show_string(0, 10, (u8*)"Hello World", SSD1306_FONT_6X8, SSD1306_WHITE);
+    ssd1306_show_num(0, 20, 123456, 6, SSD1306_FONT_6X8, SSD1306_WHITE);
+    ssd1306_refresh();
 #endif
 
 	eth_init_board();

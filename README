@@ -3,6 +3,60 @@
 # (C) Copyright 2000 - 2013
 # Wolfgang Denk, DENX Software Engineering, wd@denx.de.
 
+## How to complie uboot for NanoPi-Duo
+
+1. Install toolchain
+
+    Download toolchain from https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads.
+    Choice the corresponding `arm-none-linux-gnueabihf` version according to the system type.
+    Such as `arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-linux-gnueabihf.tar.xz`
+
+    Then extract file to a path, and add the path of toolchain bin to PATH env.
+
+    ```bash
+    $ export PATH=[path to toolchain]/*-arm-none-linux-gnueabihf/bin:$PATH
+    $ export GCC_COLORS=auto
+    ```
+
+    Run the ~/.bashrc script to make the changes in effect immediately in your working shell.
+
+    ```bash
+    $ . ~/.bashrc
+    ```
+
+    Check whether or not compiler is setup correctly by running the following commands:
+
+    ```bash
+    $ arm-none-linux-gnueabihf-gcc -v
+    ```
+
+2. Complie uboot
+
+
+    ```bash
+    $ apt-get install swig python-dev python3-dev
+    $ make nanopi_duo_defconfig ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf-
+    $ make ARCH=arm CROSS_COMPILE=arm-none-linux-gnueabihf-
+    ```
+
+3. Update uboot to SDcard
+
+    After compilation is done successfully a `u-boot-sunxi-with-spl.bin` file will be generated. Update the u-boot in your installation SD card in a PC host. 
+    Replace "/dev/sdx" with your TF card's device name recognized by your system.
+    The "sync" command writes data to your TF card. The "eject" command ejects your TF card safely.
+
+    ```bash
+    $ sudo dd if=u-boot-sunxi-with-spl.bin of=/dev/sdX bs=1024 seek=8
+    $ sudo sync && eject /dev/sdX
+    ```
+
+    Or when your system boots from an SD card you can use the scp tools to copy the "u-boot-sunxi-with-spl.bin" file to your board first and then use the "dd" command to update the U-boot in the SD card, you can also use such as WinSCP to upload file to board manual.
+
+    ```bash
+    $ scp u-boot-sunxi-with-spl.bin root@192.168.1.230:/root/
+    $ dd if=/root/u-boot-sunxi-with-spl.bin of=/dev/mmcblk0 bs=1024 seek=8
+    ```
+
 Summary:
 ========
 
