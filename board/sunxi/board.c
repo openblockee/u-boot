@@ -51,6 +51,7 @@
 #include <status_led.h>
 
 #include "ssd1306/ssd1306.h"
+#include "ssd1306/ssd1306_bmp.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -269,17 +270,9 @@ int board_init(void)
 	i2c_init_board();
 
     ssd1306_init();
-    ssd1306_draw_point(64, 16, SSD1306_WHITE);
-    ssd1306_draw_line(0, 0, 40, 32, SSD1306_WHITE);
-    ssd1306_draw_circle(80, 16, 8, SSD1306_WHITE);
-    ssd1306_refresh();
-    ssd1306_color_invert(1);
-    mdelay(500);
-    ssd1306_color_invert(0);
-    ssd1306_clear();
-    ssd1306_show_char(0, 0, 'A', SSD1306_FONT_6X8, SSD1306_WHITE);
-    ssd1306_show_string(0, 10, (u8*)"Hello World", SSD1306_FONT_6X8, SSD1306_WHITE);
-    ssd1306_show_num(0, 20, 123456, 6, SSD1306_FONT_6X8, SSD1306_WHITE);
+    ssd1306_display_reverse(true);
+    ssd1306_show_picture(2, 0, 124, 16, OPENBLOCK_LOGO, SSD1306_WHITE);
+    ssd1306_show_string(10, 24, (u8*)"System starting...", SSD1306_FONT_6X8, SSD1306_WHITE);
     ssd1306_refresh();
 #endif
 
