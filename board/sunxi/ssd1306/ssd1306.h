@@ -44,9 +44,6 @@
 #define SSD1306_ACTIVATE_SCROLL                      0x2F // Start scroll
 #define SSD1306_SET_VERTICAL_SCROLL_AREA             0xA3 // Set scroll range
 
-#define SSD1306_LCDWIDTH 128 // DEPRECATED: width w/SSD1306_128_32 defined
-#define SSD1306_LCDHEIGHT 32 // DEPRECATED: height w/SSD1306_128_32 defined
-
 #define SSD1306_BLACK   0   ///< Draw 'off' pixels
 #define SSD1306_WHITE   1   ///< Draw 'on' pixels
 #define SSD1306_INVERSE 2   ///< Invert pixels

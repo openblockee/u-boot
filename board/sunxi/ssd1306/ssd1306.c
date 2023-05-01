@@ -10,7 +10,7 @@
 #include "ssd1306_font.h"
 
 struct udevice *dev;
-u8 ssd1306_GRAM[4][128];
+u8 ssd1306_GRAM[8][128];
 
 void ssd1306_color_invert(bool invert)
 {
@@ -41,7 +41,7 @@ void ssd1306_display_reverse(bool reverse)
 void ssd1306_refresh(void)
 {
     u8 i;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 8; i++)
     {
         dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0xb0 + i);
         dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x00);
@@ -53,7 +53,7 @@ void ssd1306_refresh(void)
 void ssd1306_clear(void)
 {
     u8 i, n;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 8; i++)
     {
         for (n = 0; n < 128; n++)
         {
@@ -338,25 +338,25 @@ void ssd1306_init(void)
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_DISPLAYOFF);         /* display off */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETLOWCOLUMN);       /* set lower column address */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETHIGHCOLUMN);      /* set higher column address */
-    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x00);                       /* set display start line */
+    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x40);                       /* set display start line  Set Mapping RAM Display Start Line (0x00~0x3F)*/
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_START_PAGE_ADDRESS); /* set page address */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETCONTRAST);        /* contract control */
-    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0xff);                       /* 128 */
+    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0xff);
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SEGREMAP);           /* set segment remap */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_NORMALDISPLAY);      /* normal / reverse */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETMULTIPLEX);       /* multiplex ratio */
-    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x1F);                       /* duty = 1/32 */
+    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x3F);                       /* duty = 1/64 */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_COMSCANDEC);         /* Com scan direction */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETDISPLAYOFFSET);   /* set display offset */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x00);
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETDISPLAYCLOCKDIV); /* set osc division */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x80);
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETPRECHARGE); /* set pre-charge period */
-    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x1f);
+    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0xf1);
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETCOMPINS); /* set COM pins */
-    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x00);
+    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x12);
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_SETVCOMDETECT); /* set vcomh */
-    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x40);
+    dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x30);
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, SSD1306_CHARGEPUMP); /* set charge pump enable */
     dm_i2c_reg_write(dev, SSD1306_I2C_COMMAND, 0x14);
     ssd1306_clear();

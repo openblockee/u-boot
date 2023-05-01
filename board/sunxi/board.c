@@ -271,8 +271,8 @@ int board_init(void)
 
     ssd1306_init();
     ssd1306_display_reverse(true);
-    ssd1306_show_picture(2, 0, 124, 16, OPENBLOCK_LOGO, SSD1306_WHITE);
-    ssd1306_show_string(10, 24, (u8*)"System starting...", SSD1306_FONT_6X8, SSD1306_WHITE);
+    ssd1306_show_picture(2, 16, 124, 16, OPENBLOCK_LOGO, SSD1306_WHITE);
+    ssd1306_show_string(10, 40, (u8*)"System starting...", SSD1306_FONT_6X8, SSD1306_WHITE);
     ssd1306_refresh();
 #endif
 
