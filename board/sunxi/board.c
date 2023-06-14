@@ -202,7 +202,7 @@ static void mmc_pinmux_setup(int sdc);
 /* add board specific code here */
 int board_init(void)
 {
-	__maybe_unused int id_pfr1, ret, satapwr_pin, macpwr_pin;
+	__maybe_unused int id_pfr1, ret, satapwr_pin, macpwr_pin, syspwr_pin;
 
 	gd->bd->bi_boot_params = (PHYS_SDRAM_0 + 0x100);
 
@@ -254,13 +254,20 @@ int board_init(void)
 		}
 	}
 
-	if (CONFIG_MACPWR[0]) {
-		macpwr_pin = sunxi_name_to_gpio(CONFIG_MACPWR);
-		if (macpwr_pin >= 0) {
-			gpio_request(macpwr_pin, "macpwr");
-			gpio_direction_output(macpwr_pin, 1);
-		}
+    udelay(1500);
+	syspwr_pin = sunxi_name_to_gpio("PL11");
+	if (syspwr_pin < 0) {
+		printf("Error invalid led_r pin: PB, err %d\n", syspwr_pin);
+		return syspwr_pin;
 	}
+	ret = gpio_request(syspwr_pin, "led_r");
+	if (ret) {
+		printf("Error requesting soft led_r: PB, err %d\n",ret);
+		return ret;
+	}
+
+	sunxi_gpio_set_pull(SUNXI_GPL(11), SUNXI_GPIO_PULL_UP); //上拉	
+	gpio_direction_output(syspwr_pin, 1);
 
 #if CONFIG_IS_ENABLED(DM_I2C)
 	/*
@@ -276,7 +283,7 @@ int board_init(void)
     ssd1306_refresh();
 #endif
 
-	eth_init_board();
+    eth_init_board();
 
 	return 0;
 }
