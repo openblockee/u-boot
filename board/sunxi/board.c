@@ -254,7 +254,7 @@ int board_init(void)
 		}
 	}
 
-    udelay(1500);
+    mdelay(1500);
 	syspwr_pin = sunxi_name_to_gpio("PL11");
 	if (syspwr_pin < 0) {
 		printf("Error invalid led_r pin: PB, err %d\n", syspwr_pin);
